@@ -86,7 +86,7 @@
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "Encrypting..."; btn.disabled = true;
+            btn.innerText = "Processing..."; btn.disabled = true;
 
             const file = document.getElementById('photoInput').files[0];
             const reader = new FileReader();
@@ -96,15 +96,36 @@
                 img.src = event.target.result;
                 img.onload = async function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400; 
-                    const scale = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH; canvas.height = img.height * scale;
-                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    const compressedPhoto = canvas.toDataURL('image/jpeg', 0.6);
+                    // AGGRESSIVE MOBILE DOWNSIZING
+                    // We set a strict limit of 300px. This makes the file tiny but 
+                    // still looks great as a profile thumb in your gallery.
+                    let width = img.width;
+                    let height = img.height;
+                    const max_size = 300; 
+
+                    if (width > height) {
+                        if (width > max_size) {
+                            height *= max_size / width;
+                            width = max_size;
+                        }
+                    } else {
+                        if (height > max_size) {
+                            width *= max_size / height;
+                            height = max_size;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Draw and compress to 40% quality
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedPhoto = canvas.toDataURL('image/jpeg', 0.4); 
+                    
                     const appID = "VM-" + Math.floor(1000 + Math.random() * 9000);
                     
-                    // MUST MATCH GOOGLE SHEET HEADERS EXACTLY
                     const payload = {
                         "Name": document.getElementsByName('Name')[0].value,
                         "Email": document.getElementsByName('Email')[0].value,
@@ -117,25 +138,28 @@
                     };
 
                     try {
-                        await fetch('https://sheetdb.io/api/v1/9fmdq22gjdw29', {
+                        const response = await fetch('https://sheetdb.io/api/v1/9fmdq22gjdw29', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ data: [payload] })
                         });
 
-                        await emailjs.send("service_xtgp1ti", "template_confirm", {
-                            to_name: payload.Name,
-                            user_email: payload.Email,
-                            app_id: appID
-                        });
-                    } catch (err) { console.log("Handled"); }
+                        if (response.ok) {
+                            await emailjs.send("service_xtgp1ti", "template_confirm", {
+                                to_name: payload.Name,
+                                user_email: payload.Email,
+                                app_id: appID
+                            });
+                        }
+                    } catch (err) {
+                        console.log("Network too slow for image, redirecting...");
+                    }
 
+                    // Success UI and Redirect
                     document.getElementById('success-overlay').style.display = 'flex';
-                    localStorage.setItem('velvet_member', 'true');
-                    
                     setTimeout(() => {
-                        window.location.href = `https://wa.me/2347086415253?text=${encodeURIComponent("Hello, I registered. Name: " + payload.Name + " ID: " + appID)}`;
-                    }, 2500);
+                        window.location.href = `https://wa.me/2347086415253?text=ID:${appID}%20Reg:${payload.Name}`;
+                    }, 2000);
                 };
             };
             reader.readAsDataURL(file);
@@ -143,3 +167,4 @@
     </script>
 </body>
 </html>
+
