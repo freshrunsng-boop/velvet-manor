@@ -3,301 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velvet Manor | Private Elite Connections</title>
-    
+    <title>Velvet Manor | Private Concierge</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --gold: #d4af37;
-            --gold-bright: #f9e29d;
-            --dark: #050505;
-            --velvet: #2b0101;
-            --glass: rgba(255, 255, 255, 0.03);
-            --text: #ffffff;
-            --gold-gradient: linear-gradient(135deg, #af8f2c 0%, #d4af37 50%, #f9e29d 100%);
-            --glow: 0 0 20px rgba(212, 175, 55, 0.3);
-        }
-
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
+        :root { --gold: #d4af37; --dark: #050505; --text: #ffffff; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             background-color: var(--dark);
-            /* Subtle expensive fabric texture */
-            background-image: url('https://www.transparenttextures.com/patterns/black-linen.png');
-            color: var(--text);
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            overflow: hidden; /* Prevents scrolling while gate is active */
-        }
-
-        /* --- Age Gate --- */
-        #age-gate {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, var(--velvet) 0%, var(--dark) 100%);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .modal {
-            background: rgba(5, 5, 5, 0.95);
-            padding: 60px 40px;
-            border: 1px solid var(--gold);
-            border-radius: 2px;
-            max-width: 500px;
-            box-shadow: 0 0 80px rgba(0, 0, 0, 1), var(--glow);
-            transition: 1s ease;
-        }
-
-        .modal h2 { 
-            font-family: 'Playfair Display', serif; 
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 2.2rem; 
-            letter-spacing: 6px; 
-            margin-bottom: 15px; 
-        }
-
-        .modal p { font-weight: 300; font-size: 0.8rem; color: #888; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 2px; }
-        
-        .verify-btn {
-            background: var(--gold-gradient);
-            color: black;
-            border: none;
-            padding: 18px 50px;
-            font-weight: 800;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            transition: 0.4s;
-            font-size: 0.8rem;
-            box-shadow: var(--glow);
-        }
-        .verify-btn:hover { background: white; box-shadow: 0 0 40px var(--gold); transform: scale(1.05); }
-
-        /* --- Navigation --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 35px 8%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-            position: fixed;
-            width: 100%;
-            z-index: 100;
-        }
-
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.7rem;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
-            letter-spacing: 5px;
-            font-weight: 700;
-        }
-
-        .nav-links { display: flex; list-style: none; align-items: center; }
-        .nav-links li { margin-left: 35px; }
-        .nav-links a { text-decoration: none; color: #ccc; font-weight: 300; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-        .nav-links a:hover { color: white; text-shadow: var(--glow); }
-
-        /* --- Hero Section --- */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: 
-                radial-gradient(circle at center, rgba(43, 1, 1, 0.3) 0%, rgba(5, 5, 5, 0.95) 90%),
-                url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2000');
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1560185127-6ed189bf02f4?q=80&w=2070');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
         }
 
-        .hero-content { 
-            max-width: 900px; 
-            padding: 20px;
-            animation: heroReveal 2s cubic-bezier(0.2, 0, 0.2, 1);
+        nav {
+            position: fixed; top: 0; width: 100%; height: 80px;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.8); border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--gold); letter-spacing: 5px; text-decoration: none; font-weight: 700; }
 
-        @keyframes heroReveal {
-            from { opacity: 0; filter: blur(15px); transform: translateY(30px); }
-            to { opacity: 1; filter: blur(0); transform: translateY(0); }
-        }
+        .hero-content { max-width: 800px; padding: 20px; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 20px; font-style: italic; }
+        p { font-size: 1rem; letter-spacing: 3px; color: #ccc; text-transform: uppercase; margin-bottom: 40px; }
 
-        .subtitle {
-            font-weight: 300;
-            letter-spacing: 6px;
-            color: var(--gold-bright);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            margin-bottom: 25px;
-            display: block;
-            opacity: 0.8;
-        }
-
-        .hero-content h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.8rem, 9vw, 5.5rem);
-            margin-bottom: 40px;
-            line-height: 1.1;
-            color: white;
-            font-weight: 700;
-        }
-
-        .gold-italic { 
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-style: italic; 
-        }
-
-        .cta-group { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
-
-        .cta-main, .cta-outline {
-            display: inline-block;
-            padding: 22px 55px;
-            text-decoration: none;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            transition: 0.5s;
-            font-size: 0.75rem;
-            position: relative;
-            overflow: hidden;
-            border-radius: 2px;
-        }
-
-        .cta-main {
-            background: var(--gold-gradient);
-            color: black;
-        }
-
-        /* Diamond Shimmer Effect */
-        .cta-main::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -100%;
-            width: 50%; height: 200%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
-            transform: rotate(45deg);
-            transition: 0.6s;
-        }
-        .cta-main:hover::before { left: 150%; }
-
-        .cta-outline {
+        .btn-enter {
+            padding: 20px 50px;
+            background: transparent;
             border: 1px solid var(--gold);
             color: var(--gold);
-            backdrop-filter: blur(5px);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 600;
+            transition: 0.5s;
+        }
+        .btn-enter:hover {
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
         }
 
-        .cta-main:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4); }
-        .cta-outline:hover { background: var(--gold); color: black; transform: translateY(-5px); }
-
-        /* --- Mobile Nav --- */
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            bottom: 0; width: 100%;
-            background: rgba(5, 5, 5, 0.98);
-            border-top: 1px solid var(--gold);
-            justify-content: space-around;
-            padding: 22px;
-            z-index: 200;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .mobile-nav { display: flex; }
-            .mobile-nav a { color: #666; text-decoration: none; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; }
-            .mobile-nav a.active { color: var(--gold-bright); font-weight: 700; }
-            .hero { background-attachment: scroll; }
-        }
-
+        .footer-note { position: absolute; bottom: 30px; font-size: 0.7rem; color: #666; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div id="age-gate">
-        <div class="modal" id="gate-modal">
-            <h2>VELVET MANOR</h2>
-            <p>Private Sanctuary. <br>Access restricted to 18+.</p>
-            <button class="verify-btn" onclick="verifyAge()">Accept Invitation</button>
+    <nav><a href="index.html" class="logo">VELVET MANOR</a></nav>
+
+    <div class="hero-content">
+        <p>A Private Social Concierge</p>
+        <h1>Discretion is the <br> Ultimate Luxury</h1>
+        <div style="margin-top: 50px;">
+            <a href="register.html" class="btn-enter">Enter the Manor</a>
         </div>
     </div>
 
-    <nav>
-        <a href="index.html" class="logo">VELVET MANOR</a>
-        <ul class="nav-links">
-            <li><a href="register.html">Apply</a></li>
-            <li><a href="matchmaking.html">Gallery</a></li>
-            <li><a href="https://wa.me/2347086415253" style="color: var(--gold);">Concierge</a></li>
-        </ul>
-    </nav>
-
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <span class="subtitle">Discretion. Connection. Elegance.</span>
-            <h1>Discover the <br><span class="gold-italic">Art of Connection</span></h1>
-            <div class="cta-group">
-                <a href="register.html" class="cta-main">Apply for Entry</a>
-                <a href="matchmaking.html" class="cta-outline">View Gallery</a>
-            </div>
-        </div>
-    </section>
-
-    <div class="mobile-nav">
-        <a href="index.html" class="active">Home</a>
-        <a href="register.html">Apply</a>
-        <a href="matchmaking.html">Gallery</a>
-        <a href="https://wa.me/2347086415253">Concierge</a>
-    </div>
-
-    <script>
-        // Verification Logic
-        function verifyAge() {
-            const gate = document.getElementById('age-gate');
-            const modal = document.getElementById('gate-modal');
-            
-            // Premium exit animation
-            gate.style.transition = '1.2s cubic-bezier(0.4, 0, 0.2, 1)';
-            gate.style.opacity = '0';
-            gate.style.filter = 'blur(20px)';
-            modal.style.transform = 'scale(0.9)';
-            
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
-
-            setTimeout(() => {
-                gate.style.display = 'none';
-            }, 1200);
-
-            // Using sessionStorage so it reappears every time they restart the browser
-            sessionStorage.setItem('velvet_manor_entered', 'true');
-        }
-
-        window.onload = function() {
-            // Re-lock if it's a new session
-            if(sessionStorage.getItem('velvet_manor_entered') === 'true') {
-                document.getElementById('age-gate').style.display = 'none';
-                document.body.style.overflow = 'auto';
-            } else {
-                document.body.style.overflow = 'hidden'; // Keep scroll locked on arrival
-            }
-        };
-    </script>
+    <div class="footer-note">BY INVITATION ONLY • 2026</div>
 
 </body>
 </html>
