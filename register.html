@@ -19,19 +19,19 @@
         .nav-links { display: flex; list-style: none; gap: 12px; }
         .nav-links a { text-decoration: none; color: #ccc; font-size: 0.6rem; text-transform: uppercase; }
 
-        .reg-container { max-width: 500px; width: 100%; background: rgba(10, 10, 10, 0.95); padding: 30px; border: 1px solid rgba(212, 175, 55, 0.3); margin: 0 auto; }
-        h2 { font-family: 'Playfair Display', serif; color: var(--gold); margin-bottom: 25px; text-align: center; font-size: 1.5rem; }
+        .reg-container { max-width: 500px; width: 100%; background: #0a0a0a; padding: 30px; border: 1px solid rgba(212, 175, 55, 0.2); margin: 0 auto; }
+        h2 { font-family: 'Playfair Display', serif; color: var(--gold); margin-bottom: 25px; text-align: center; font-size: 1.6rem; }
         
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.65rem; color: var(--gold); text-transform: uppercase; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 12px; background: #0d0d0d; border: 1px solid #222; color: white; font-size: 0.9rem; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 0.65rem; color: var(--gold); text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
+        input, select, textarea { width: 100%; padding: 12px; background: #000; border: 1px solid #222; color: white; font-family: 'Poppins', sans-serif; }
         
         .terms-box { display: flex; align-items: flex-start; gap: 10px; margin: 20px 0; font-size: 0.7rem; color: #aaa; }
-        .btn-submit { width: 100%; padding: 15px; background: var(--gold-gradient); border: none; color: black; font-weight: 800; text-transform: uppercase; cursor: pointer; }
-        .btn-submit:disabled { background: #444; color: #888; }
+        .btn-submit { width: 100%; padding: 16px; background: var(--gold-gradient); border: none; color: black; font-weight: 800; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; }
+        .btn-submit:disabled { background: #333; color: #666; cursor: not-allowed; }
 
         #success-overlay, #terms-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #0a0a0a; border: 1px solid var(--gold); padding: 30px; max-width: 450px; text-align: center; }
+        .modal-content { background: #0a0a0a; border: 1px solid var(--gold); padding: 35px; max-width: 450px; text-align: center; }
     </style>
 </head>
 <body>
@@ -48,6 +48,7 @@
         <h2>Membership Application</h2>
         <form id="registrationForm">
             <div class="form-group"><label>Name / Alias</label><input type="text" name="Name" required></div>
+            <div class="form-group"><label>Email Address</label><input type="email" name="Email" required></div>
             <div class="form-group"><label>WhatsApp Number</label><input type="tel" name="Phone" value="+234" required></div>
             <div class="form-group">
                 <label>Interest</label>
@@ -56,25 +57,27 @@
                     <option value="Events">Elite Events</option>
                 </select>
             </div>
-            <div class="form-group"><label>Photo (Gallery)</label><input type="file" id="photoInput" accept="image/*" required></div>
-            <div class="form-group"><label>Brief Intro</label><textarea name="About" rows="2"></textarea></div>
-            <input type="hidden" name="Email" value="concierge@velvetmanor.com">
+            <div class="form-group"><label>Gallery Photo</label><input type="file" id="photoInput" accept="image/*" required></div>
+            <div class="form-group"><label>Introduction</label><textarea name="About" rows="2"></textarea></div>
 
             <div class="terms-box">
                 <input type="checkbox" id="agree" onchange="document.getElementById('submitBtn').disabled = !this.checked">
-                <label>I agree to the <span onclick="document.getElementById('terms-modal').style.display='flex'" style="color:var(--gold); text-decoration:underline;">Manor Protocol</span></label>
+                <label>I acknowledge the <span onclick="document.getElementById('terms-modal').style.display='flex'" style="color:var(--gold); text-decoration:underline; cursor:pointer;">Manor Protocol</span></label>
             </div>
-            <button type="submit" class="btn-submit" id="submitBtn" disabled>Submit</button>
+            <button type="submit" class="btn-submit" id="submitBtn" disabled>Submit Application</button>
         </form>
     </div>
 
     <div id="terms-modal"><div class="modal-content">
-        <h3 style="color:var(--gold); margin-bottom:10px;">Manor Protocol</h3>
-        <p style="font-size:0.75rem; color:#ccc; text-align:left; line-height:1.4;">1. 18+ Only. 2. Absolute Discretion. 3. Verification Required. 4. Fees are non-refundable.</p>
-        <button onclick="document.getElementById('terms-modal').style.display='none'" class="btn-submit" style="margin-top:20px; padding:10px;">Accept</button>
+        <h3 style="color:var(--gold); margin-bottom:15px; font-family:'Playfair Display';">The Manor Protocol</h3>
+        <p style="font-size:0.8rem; color:#ccc; text-align:left; line-height:1.5;">1. Absolute Discretion. 2. 18+ Only. 3. Verification Required. 4. Fees non-refundable.</p>
+        <button onclick="document.getElementById('terms-modal').style.display='none'" class="btn-submit" style="margin-top:25px;">I Understand</button>
     </div></div>
 
-    <div id="success-overlay"><div class="modal-content"><h2 style="color:var(--gold);">✓ Secured</h2><p>Connecting to Concierge...</p></div></div>
+    <div id="success-overlay"><div class="modal-content">
+        <h2 style="color:var(--gold);">✓ Protocol Secured</h2>
+        <p>Connecting you to the Concierge...</p>
+    </div></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
@@ -83,7 +86,7 @@
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "Processing..."; btn.disabled = true;
+            btn.innerText = "Encrypting..."; btn.disabled = true;
 
             const file = document.getElementById('photoInput').files[0];
             const reader = new FileReader();
@@ -93,34 +96,46 @@
                 img.src = event.target.result;
                 img.onload = async function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400;
+                    const MAX_WIDTH = 400; 
                     const scale = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH; canvas.height = img.height * scale;
                     canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                     
+                    const compressedPhoto = canvas.toDataURL('image/jpeg', 0.6);
+                    const appID = "VM-" + Math.floor(1000 + Math.random() * 9000);
+                    
+                    // MUST MATCH GOOGLE SHEET HEADERS EXACTLY
                     const payload = {
-                        Name: document.getElementsByName('Name')[0].value,
-                        Phone: document.getElementsByName('Phone')[0].value,
-                        Interest: document.getElementsByName('Interest')[0].value,
-                        PhotoURL: canvas.toDataURL('image/jpeg', 0.7),
-                        About: document.getElementsByName('About')[0].value,
-                        AppID: "VM-" + Math.floor(1000 + Math.random() * 9000),
-                        Status: "Pending"
+                        "Name": document.getElementsByName('Name')[0].value,
+                        "Email": document.getElementsByName('Email')[0].value,
+                        "Phone": document.getElementsByName('Phone')[0].value,
+                        "Interest": document.getElementsByName('Interest')[0].value,
+                        "PhotoURL": compressedPhoto,
+                        "About": document.getElementsByName('About')[0].value,
+                        "AppID": appID,
+                        "Status": "Pending"
                     };
 
                     try {
                         await fetch('https://sheetdb.io/api/v1/9fmdq22gjdw29', {
-                            method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ data: [payload] })
                         });
-                        await emailjs.send("service_xtgp1ti", "template_confirm", { to_name: payload.Name, app_id: payload.AppID });
-                    } catch (err) {}
+
+                        await emailjs.send("service_xtgp1ti", "template_confirm", {
+                            to_name: payload.Name,
+                            user_email: payload.Email,
+                            app_id: appID
+                        });
+                    } catch (err) { console.log("Handled"); }
 
                     document.getElementById('success-overlay').style.display = 'flex';
                     localStorage.setItem('velvet_member', 'true');
+                    
                     setTimeout(() => {
-                        window.location.href = `https://wa.me/2347086415253?text=${encodeURIComponent("Hello, I registered. ID: " + payload.AppID)}`;
-                    }, 2000);
+                        window.location.href = `https://wa.me/2347086415253?text=${encodeURIComponent("Hello, I registered. Name: " + payload.Name + " ID: " + appID)}`;
+                    }, 2500);
                 };
             };
             reader.readAsDataURL(file);
