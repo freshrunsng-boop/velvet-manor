@@ -86,7 +86,7 @@
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "Encrypting..."; btn.disabled = true;
+            btn.innerText = "Securing..."; btn.disabled = true;
 
             const file = document.getElementById('photoInput').files[0];
             const reader = new FileReader();
@@ -96,15 +96,19 @@
                 img.src = event.target.result;
                 img.onload = async function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400; 
+                    // We shrink the image to 300px width - plenty for a small preview
+                    const MAX_WIDTH = 300; 
                     const scale = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH; canvas.height = img.height * scale;
-                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                    canvas.width = MAX_WIDTH; 
+                    canvas.height = img.height * scale;
                     
-                    const compressedPhoto = canvas.toDataURL('image/jpeg', 0.6);
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // 0.4 quality makes the file size tiny and reliable
+                    const compressedPhoto = canvas.toDataURL('image/jpeg', 0.4); 
                     const appID = "VM-" + Math.floor(1000 + Math.random() * 9000);
                     
-                    // MUST MATCH GOOGLE SHEET HEADERS EXACTLY
                     const payload = {
                         "Name": document.getElementsByName('Name')[0].value,
                         "Email": document.getElementsByName('Email')[0].value,
@@ -117,29 +121,38 @@
                     };
 
                     try {
-                        await fetch('https://sheetdb.io/api/v1/9fmdq22gjdw29', {
+                        const response = await fetch('https://sheetdb.io/api/v1/9fmdq22gjdw29', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ data: [payload] })
                         });
 
+                        if (!response.ok) {
+                            throw new Error('Database full or offline');
+                        }
+
+                        // EmailJS triggers only if Database succeeds
                         await emailjs.send("service_xtgp1ti", "template_confirm", {
                             to_name: payload.Name,
                             user_email: payload.Email,
                             app_id: appID
                         });
-                    } catch (err) { console.log("Handled"); }
+
+                    } catch (err) {
+                        console.error("Error:", err);
+                        // If it fails, we alert the user but still let them go to WhatsApp
+                        alert("The Manor is busy. Redirecting to Concierge for manual check...");
+                    }
 
                     document.getElementById('success-overlay').style.display = 'flex';
-                    localStorage.setItem('velvet_member', 'true');
-                    
                     setTimeout(() => {
-                        window.location.href = `https://wa.me/2347086415253?text=${encodeURIComponent("Hello, I registered. Name: " + payload.Name + " ID: " + appID)}`;
-                    }, 2500);
+                        window.location.href = `https://wa.me/2347086415253?text=ID:${appID}%20Reg:%20${payload.Name}`;
+                    }, 2000);
                 };
             };
             reader.readAsDataURL(file);
         });
     </script>
 </body>
+
 </html>
